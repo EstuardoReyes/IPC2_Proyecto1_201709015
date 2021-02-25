@@ -1,8 +1,10 @@
 from tkinter import Tk     
 from tkinter.filedialog import askopenfilename
+from tkinter.filedialog import askdirectory
 from xml.dom import minidom
 from Lista_Circular import ListaCircular
 from Info import Info
+import os
 listaCircular = ListaCircular()
 
 
@@ -22,7 +24,7 @@ def carga():
     root.wm_attributes("-topmost", 1)
     filename = askopenfilename(initialdir="D:\Galeria\Escritorio",filetypes =(("Archivo XML", "*.xml"),("Todos Los Archivos","*.*")),title = "Busque su archivo.")
     root.update()
-    root.destroy()   
+    root.destroy()
 
 def procesar():
     if archivo_Seleccionado == True:
@@ -101,6 +103,20 @@ def procesar():
             mat = Info(a,b,nombre_Matriz,matriz_reducida)
             listaCircular.Agregar(mat)
                 
+def escribir():
+    root = Tk()
+    root.withdraw()
+    root.wm_attributes("-topmost", 1)
+    rutadeldirectorio=askdirectory()
+    root.update()
+    root.destroy() 
+    nombre_archivo = input("Ingrese nombre del archivo (sin .xml): ")
+    archivo = rutadeldirectorio+"/"+nombre_archivo+".xml"
+    print(archivo)
+    fil = open(archivo,"w")
+    fil.write("faskfjaslkfjaslf"+ os.linesep)
+    fil.write("sdf")
+    fil.close()
 
 
 
@@ -128,7 +144,7 @@ while salida == False:
         procesar()
         a = input()
     elif (a == '3'):
-        listaCircular.Recorrer()
+        escribir()
         a = input()
     elif (a == '4'):
         a = input()
