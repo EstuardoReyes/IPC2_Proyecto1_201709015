@@ -20,5 +20,8 @@ class ListaCircular():
     def Recorrer(self):
         aux = self.primero
         while aux.siguiente != self.primero:
-            print(aux.dato)
-            aux = aux.siguiente  
+            print(aux.dato.nombre)
+            print(aux.dato.matriz)
+            aux = aux.siguiente 
+        print(aux.dato.nombre) 
+        print(aux.dato.matriz)

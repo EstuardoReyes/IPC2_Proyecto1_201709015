@@ -2,8 +2,8 @@ from tkinter import Tk
 from tkinter.filedialog import askopenfilename
 from xml.dom import minidom
 from Lista_Circular import ListaCircular
- 
-lista = ListaCircular()
+from Info import Info
+listaCircular = ListaCircular()
 
 
 
@@ -65,29 +65,41 @@ def procesar():
                         matriz_binaria[i].append(1)
             lista_coincidencia = []
             lista = []
-            for i in range (1,a):
-                lista.append(i)      
-            while len(lista) > 0:
-                lis_1 = matriz_binaria[lista[0]]
-                g = lista[0]
-                lista_coincidencia.append(matriz_valores[g])
-                lista.pop(0)
-                if len(lista) > 1:
-                    for h in lista:
-                        coincide = True
-                        lis_2 = matriz_binaria[h]
+            for i in range (1,a):   # crea una lista con los valores de 1 - numero de filasas
+                lista.append(i)     
+             
+            while len(lista) > 0: 
+                lista_coincidencia.clear()  # mientras haya elementos en la lista seguira recorriendo lista
+                lis_1 = matriz_binaria[lista[0]]    # crea una copia del valor de la lista[0]
+                g = lista[0]        # g va a ser el valor de la fila 
+                lista_coincidencia.append(matriz_valores[g])  #se agrega este valor a la lista de coincidencia 
+                lista.pop(0)       # se elimina el primer valor de la lista
+                if len(lista) > 1: # mientras en la lista hayan mas de 1 elemnto
+                    for h in lista: # recorre los numeros que quedan en la lista
+                        coincide = True  
+                        lis_2 = matriz_binaria[h]  
                         for i in range(b):
                             if lis_1[i] != lis_2[i]:     #de momento creo que esto va bien
                                 coincide = False
                         if coincide == True:
                             print("coincidio encontrada")
-                            lista_coincidencia.append(matriz_valores[i])
+                            lista_coincidencia.append(matriz_valores[h])
                             lista.remove(h)
-                else:
-                    print("oksov")
+                    # sumar todos los elementos
+                listafinal = []
+                listafinal.clear()
+                listafinal = [0]*(b)
+                li = []
+                listafinal[0] = g
+                for q in range(len(lista_coincidencia)):
+                    li = lista_coincidencia[q]
+                    for w in range (b):
+                        listafinal[w] = listafinal[w] + li[w]
+                   
+                matriz_reducida.append(listafinal)
                     #agregar la fila restante al listado
-                print(lista_coincidencia)
-                        
+            mat = Info(a,b,nombre_Matriz,matriz_reducida)
+            listaCircular.Agregar(mat)
                 
 
 
@@ -116,6 +128,7 @@ while salida == False:
         procesar()
         a = input()
     elif (a == '3'):
+        listaCircular.Recorrer()
         a = input()
     elif (a == '4'):
         a = input()
