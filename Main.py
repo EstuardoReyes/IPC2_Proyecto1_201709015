@@ -1,10 +1,14 @@
 from tkinter import Tk     
 from tkinter.filedialog import askopenfilename
 from tkinter.filedialog import askdirectory
+import xml.etree.ElementTree as ET
+from xml.etree.ElementTree import Element, SubElement, tostring
 from xml.dom import minidom
 from Lista_Circular import ListaCircular
 from Info import Info
+from xml.etree import ElementTree
 import os
+
 listaCircular = ListaCircular()
 
 
@@ -12,6 +16,15 @@ listaCircular = ListaCircular()
 salida = False
 listaAlpha = []
 archivo_Seleccionado = False
+
+
+def prettify(elem):
+    """Return a pretty-printed XML string for the Element.
+    """
+    rough_string = ElementTree.tostring(elem, 'utf-8')
+    reparsed = minidom.parseString(rough_string)
+    return reparsed.toprettyxml(indent="  ")
+
 def cls():
     r=0
     while r<10:
@@ -97,12 +110,12 @@ def procesar():
                     li = lista_coincidencia[q]
                     for w in range (b):
                         listafinal[w] = listafinal[w] + li[w]
-                   
+                    listafinal.append(len(lista_coincidencia))                   
                 matriz_reducida.append(listafinal)
                     #agregar la fila restante al listado
-            mat = Info(a,b,nombre_Matriz,matriz_reducida)
+            mat = Info(n_matriz,m_matriz,nombre_Matriz,matriz_reducida,matriz_valores)
             listaCircular.Agregar(mat)
-                
+                          
 def escribir():
     root = Tk()
     root.withdraw()
@@ -112,19 +125,45 @@ def escribir():
     root.destroy() 
     nombre_archivo = input("Ingrese nombre del archivo (sin .xml): ")
     archivo = rutadeldirectorio+"/"+nombre_archivo+".xml"
-    print(archivo)
-    fil = open(archivo,"w")
-    fil.write("faskfjaslkfjaslf"+ os.linesep)
-    fil.write("sdf")
-    fil.close()
+    aux = listaCircular.get_Primero()
+    head = listaCircular.get_Primero()
+    salir = False
+    listaNodo = []
+    while salir == False:
+        listaNodo.append(aux) 
+        if (aux.siguiente != head):
+            aux = aux.siguiente
+        else:
+            salir = True  
+    matrices = Element("matrices")
+    for data in listaNodo:
+        matriz = SubElement(matrices,'matriz', nombre=data.getDato().getNombre() ,n=str(data.getDato().getFila()) ,m=str(data.getDato().getColumna()),g=str(len(data.getDato().getMatriz())))
+        for i in range(int(data.getDato().getFila())-1):
+            for j in range(1,int(data.getDato().getColumna())+1):
+                ma = data.getDato().getMatriz()
+                dato = SubElement(matriz,'Dato',x=str(i+1),y=str(j))
+                dato.text = str(ma[i][j])
+        for t in range(int(data.getDato().getFila())-1):
+            ma = data.getDato().getMatriz()
+            frecuencia = SubElement(matriz, 'frecuencia', g=str(ma[t][0]))
+            frecuencia.text = str(ma[t][int(data.getDato().getColumna())+1])
+    archiv = open(archivo,'w')
+    archiv.write(prettify(matrices))
+
+def estudiante():
+    print("Edwin Estuardo Reyes Reyes")
+    print("201709015")
+    print("Introduccion a la Programacion y Computacion Seccion 'B' ")
+    print("Ingenieria en Ciencias y Sistemas")
+    print("4to Semestre")
 
 
+def graphi():
+    print(2)
 
 
                     
-                        
-
-
+                    
 while salida == False:
     cls()
     print("Menu principal:")
@@ -147,8 +186,10 @@ while salida == False:
         escribir()
         a = input()
     elif (a == '4'):
+        estudiante()
         a = input()
     elif (a == '5'):
+        graphi()
         a = input()
     elif (a == '6'):
         a=input()

@@ -1,6 +1,7 @@
 from Nodo import Nodo
 
 class ListaCircular():
+    
 
     def __init__(self):
         self.primero = None
@@ -25,3 +26,8 @@ class ListaCircular():
             aux = aux.siguiente 
         print(aux.dato.nombre) 
         print(aux.dato.matriz)
+
+    def get_Primero(self):
+        return self.primero
+    
+    

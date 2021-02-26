@@ -5,4 +5,7 @@ class Nodo():
         self.dato = dato
         self.siguiente = None
 
+    def getDato(self):
+        return self.dato
+
     
