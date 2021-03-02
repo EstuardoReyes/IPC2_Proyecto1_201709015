@@ -18,7 +18,7 @@ class Info():
     def getMatriz (self):
         return self.matriz
 
-    def getCentrada(self):
+    def getEntrada(self):
         return self.matriz_entrada
 
 

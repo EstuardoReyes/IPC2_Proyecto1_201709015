@@ -7,6 +7,7 @@ from xml.dom import minidom
 from Lista_Circular import ListaCircular
 from Info import Info
 from xml.etree import ElementTree
+from graphviz import Digraph
 import os
 
 listaCircular = ListaCircular()
@@ -16,7 +17,7 @@ listaCircular = ListaCircular()
 salida = False
 listaAlpha = []
 archivo_Seleccionado = False
-
+procesar = False
 
 def prettify(elem):
     """Return a pretty-printed XML string for the Element.
@@ -40,8 +41,8 @@ def carga():
     root.destroy()
 
 def procesar():
-    if archivo_Seleccionado == True:
-        print("Archivo de datos no seleccionado previamente")
+    if archivo_Seleccionado == False:
+        print("Archivo de datos de entrada no seleccionado previamente")
     else:
         doc = minidom.parse("Ejemplo1.xml")
         for matriz in doc.getElementsByTagName('matriz'):
@@ -117,38 +118,46 @@ def procesar():
             listaCircular.Agregar(mat)
                           
 def escribir():
-    root = Tk()
-    root.withdraw()
-    root.wm_attributes("-topmost", 1)
-    rutadeldirectorio=askdirectory()
-    root.update()
-    root.destroy() 
-    nombre_archivo = input("Ingrese nombre del archivo (sin .xml): ")
-    archivo = rutadeldirectorio+"/"+nombre_archivo+".xml"
-    aux = listaCircular.get_Primero()
-    head = listaCircular.get_Primero()
-    salir = False
-    listaNodo = []
-    while salir == False:
-        listaNodo.append(aux) 
-        if (aux.siguiente != head):
-            aux = aux.siguiente
-        else:
-            salir = True  
-    matrices = Element("matrices")
-    for data in listaNodo:
-        matriz = SubElement(matrices,'matriz', nombre=data.getDato().getNombre() ,n=str(data.getDato().getFila()) ,m=str(data.getDato().getColumna()),g=str(len(data.getDato().getMatriz())))
-        for i in range(int(data.getDato().getFila())-1):
-            for j in range(1,int(data.getDato().getColumna())+1):
+    if archivo_Seleccionado == False:
+        print("Archivo de datos de entrada no seleccionado previamente")
+    if procesar == False:
+        print("Proceso de archivo de entrada no realizado previamente")
+    
+    else:
+        root = Tk()
+        root.withdraw()
+        root.wm_attributes("-topmost", 1)
+        rutadeldirectorio=askdirectory()
+        root.update()
+        root.destroy() 
+        nombre_archivo = input("Ingrese nombre del archivo (sin .xml): ")
+        archivo = rutadeldirectorio+"/"+nombre_archivo+".xml"
+        aux = listaCircular.get_Primero()
+        head = listaCircular.get_Primero()
+        salir = False
+        listaNodo = []
+        while salir == False:
+            listaNodo.append(aux) 
+            if (aux.siguiente != head):
+                aux = aux.siguiente
+            else:
+                salir = True  
+        matrices = Element("matrices")
+        for data in listaNodo:
+            d = len(data.getDato().getMatriz())
+            h = len(data.getDato().getMatriz()[0])
+            matriz = SubElement(matrices,'matriz', nombre=data.getDato().getNombre() ,n=str(d) ,m=str(h-3),g=str(d))
+            for i in range(int(data.getDato().getFila())-1):
+                for j in range(1,int(data.getDato().getColumna())+1):
+                    ma = data.getDato().getMatriz()
+                    dato = SubElement(matriz,'Dato',x=str(i+1),y=str(j))
+                    dato.text = str(ma[i][j])
+            for t in range(int(data.getDato().getFila())-1):
                 ma = data.getDato().getMatriz()
-                dato = SubElement(matriz,'Dato',x=str(i+1),y=str(j))
-                dato.text = str(ma[i][j])
-        for t in range(int(data.getDato().getFila())-1):
-            ma = data.getDato().getMatriz()
-            frecuencia = SubElement(matriz, 'frecuencia', g=str(ma[t][0]))
-            frecuencia.text = str(ma[t][int(data.getDato().getColumna())+1])
-    archiv = open(archivo,'w')
-    archiv.write(prettify(matrices))
+                frecuencia = SubElement(matriz, 'frecuencia', g=str(ma[t][0]))
+                frecuencia.text = str(ma[t][int(data.getDato().getColumna())+1])
+        archiv = open(archivo,'w')
+        archiv.write(prettify(matrices))
 
 def estudiante():
     print("Edwin Estuardo Reyes Reyes")
@@ -157,9 +166,50 @@ def estudiante():
     print("Ingenieria en Ciencias y Sistemas")
     print("4to Semestre")
 
-
 def graphi():
-    print(2)
+    if archivo_Seleccionado == False:
+        print("Archivo de datos de entrada no seleccionado previamente")
+    if procesar == False:
+        print("Proceso de archivo de entrada no realizado previamente")
+    else:
+        print('Matrices Almacenadas')
+        aux = listaCircular.get_Primero()
+        head = listaCircular.get_Primero()
+        salir = False
+        salir2 = False
+        listaNodo = []
+        i=1
+        while salir2 == False:
+            while salir == False:
+                print(str(i)+". "+aux.getDato().getNombre())
+                i = i+1
+                listaNodo.append(aux) 
+                if (aux.siguiente != head):
+                    aux = aux.siguiente
+                else:
+                    salir = True
+            a = input("Seleccione 1 matriz: ")
+            if int(a)<=i-1 and int(a)>=1:
+                nodoUsar = listaNodo[int(a)-1]
+                break
+                salir2 = True
+            else:
+                print("Seleccione una matriz entre las opciones")
+        nom = nodoUsar.getDato().getNombre()
+        g = Digraph('unix', filename='Reporte',node_attr={'color': 'lightblue2', 'style': 'filled'})
+        g.edge('Matrices', nom)
+        g.edge(nom, 'n='+nodoUsar.getDato().getFila())
+        g.edge(nom, 'm='+nodoUsar.getDato().getColumna())
+        matrizUsar = nodoUsar.getDato().getEntrada()
+        for i in range(1,len(matrizUsar[0])):
+            listaNumeros = []
+            for j in range(1,len(matrizUsar)):
+                listaNumeros.append(matrizUsar[j][i])
+            print(listaNumeros)
+            g.edge(nom,"["+str(1)+","+str(i)+"] = "+str(listaNumeros[0]))
+            for q in range(1,len(listaNumeros)):
+                g.edge("["+str(q)+","+str(i)+"] = "+str(listaNumeros[q-1]),"["+str(q+1)+","+str(i)+"] = "+str(listaNumeros[q]))
+        g.view()
 
 
                     
