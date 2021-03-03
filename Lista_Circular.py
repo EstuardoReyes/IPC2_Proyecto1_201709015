@@ -22,10 +22,10 @@ class ListaCircular():
         aux = self.primero
         while aux.siguiente != self.primero:
             print(aux.dato.nombre)
-            print(aux.dato.matriz)
+            
             aux = aux.siguiente 
         print(aux.dato.nombre) 
-        print(aux.dato.matriz)
+        
 
     def get_Primero(self):
         return self.primero
