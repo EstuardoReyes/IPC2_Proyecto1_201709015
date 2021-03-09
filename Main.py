@@ -16,7 +16,7 @@ filename = None
 
 salida = False
 listaAlpha = []
-archivo_Seleccionado = False
+
 procesar = False
 
 def prettify(elem):
@@ -54,77 +54,78 @@ def procesar():
             matriz_binaria = []
             matriz_reducida = []
             nombre_Matriz = matriz.getAttribute('nombre')
-            n_matriz = matriz.getAttribute('n')
-            m_matriz = matriz.getAttribute('m')    
-            items = matriz.getElementsByTagName('dato') 
-            a = int(n_matriz)+1
-            b = int(m_matriz)+1
-            for i in range(a):
-                matriz_valores.append([])
-                for j in range(b):
-                    matriz_valores[i].append(0)
-            for elem in items:
-                x_dato = elem.getAttribute('x')
-                y_dato = elem.getAttribute('y')
-                valor = int(elem.firstChild.data)
-                
-                if int(x_dato) > int(n_matriz) or int(y_dato) > int(m_matriz):
-                    print("Error asignacion de valor excede al valor creacion de matriz x="+x_dato+", y="+y_dato+' de matriz de '+n_matriz+", "+m_matriz)    
-                else:
-                    fila = matriz_valores[int(x_dato)]
-                    fila[int(y_dato)] = valor
-            print('Leida La matriz '+nombre_Matriz)
-            for i in range(a):
-                matriz_binaria.append([])
-                for j in range(b):
-                    if matriz_valores[i][j] == 0:
-                        matriz_binaria[i].append(0)
+            if listaCircular.buscar(nombre_Matriz):
+                print("Matriz ignorada por nombre igual a :"+nombre_Matriz)
+            else:
+                n_matriz = matriz.getAttribute('n')
+                m_matriz = matriz.getAttribute('m')    
+                items = matriz.getElementsByTagName('dato') 
+                a = int(n_matriz)+1
+                b = int(m_matriz)+1
+                for i in range(a):
+                    matriz_valores.append([])
+                    for j in range(b):
+                        matriz_valores[i].append(0)
+                for elem in items:
+                    x_dato = elem.getAttribute('x')
+                    y_dato = elem.getAttribute('y')
+                    valor = int(elem.firstChild.data)
+                    
+                    if int(x_dato) > int(n_matriz) or int(y_dato) > int(m_matriz):
+                        print("Error asignacion de valor excede al valor creacion de matriz x="+x_dato+", y="+y_dato+' de matriz de '+n_matriz+", "+m_matriz)    
                     else:
-                        matriz_binaria[i].append(1)
-            lista_coincidencia = []
-            #print(nombre_Matriz)
-            #print(matriz_binaria)
-            lista = []
-            for i in range (1,a):   # crea una lista con los valores de 1 - numero de filasas
-                lista.append(i)     
-             
-            while len(lista) > 0: 
-                lista_coincidencia.clear()  # mientras haya elementos en la lista seguira recorriendo lista
-                lis_1 = matriz_binaria[lista[0]]    # crea una copia del valor de la lista[0]
-                g = lista[0]        # g va a ser el valor de la fila 
-                lista_coincidencia.append(matriz_valores[g])  #se agrega este valor a la lista de coincidencia 
-                lista.pop(0)  
-                lista_eliminacion = [] 
-                          # se elimina el primer valor de la lista
-                if len(lista) > 1: # mientras en la lista hayan mas de 1 elemnto
-                    h = 0
-                    while h<len(lista): # recorre los numeros que quedan en la lista
-                        coincide = True  
-                        lis_2 = matriz_binaria[lista[h]]  
-                        for i in range(b):
-                            if int(lis_1[i]) != int(lis_2[i]):     #de momento creo que esto va bien
-                                coincide = False
-                        if coincide == True:
-                            lista_coincidencia.append(matriz_valores[lista[h]])
-                            lista.pop(h)
-                            h=0
+                        fila = matriz_valores[int(x_dato)]
+                        fila[int(y_dato)] = valor
+                print('Leida La matriz '+nombre_Matriz)
+                for i in range(a):
+                    matriz_binaria.append([])
+                    for j in range(b):
+                        if matriz_valores[i][j] == 0:
+                            matriz_binaria[i].append(0)
                         else:
-                            h=h+1
-                    # sumar todos los elementos
-                listafinal = []
-                listafinal.clear()
-                listafinal = [0]*(b)
-                li = []
-                listafinal[0] = g
-                for q in range(len(lista_coincidencia)):
-                    li = lista_coincidencia[q]
-                    for w in range (b):
-                        listafinal[w] = listafinal[w] + li[w]
-                listafinal.append(len(lista_coincidencia))                   
-                matriz_reducida.append(listafinal)
-                    #agregar la fila restante al listado
-            mat = Info(n_matriz,m_matriz,nombre_Matriz,matriz_reducida,matriz_valores)
-            listaCircular.Agregar(mat)
+                            matriz_binaria[i].append(1)
+                lista_coincidencia = []
+                lista = []
+                for i in range (1,a):   # crea una lista con los valores de 1 - numero de filasas
+                    lista.append(i)     
+                
+                while len(lista) > 0: 
+                    lista_coincidencia.clear()  # mientras haya elementos en la lista seguira recorriendo lista
+                    lis_1 = matriz_binaria[lista[0]]    # crea una copia del valor de la lista[0]
+                    g = lista[0]        # g va a ser el valor de la fila 
+                    lista_coincidencia.append(matriz_valores[g])  #se agrega este valor a la lista de coincidencia 
+                    lista.pop(0)  
+                    lista_eliminacion = [] 
+                            # se elimina el primer valor de la lista
+                    if len(lista) > 1: # mientras en la lista hayan mas de 1 elemnto
+                        h = 0
+                        while h<len(lista): # recorre los numeros que quedan en la lista
+                            coincide = True  
+                            lis_2 = matriz_binaria[lista[h]]  
+                            for i in range(b):
+                                if int(lis_1[i]) != int(lis_2[i]):     #de momento creo que esto va bien
+                                    coincide = False
+                            if coincide == True:
+                                lista_coincidencia.append(matriz_valores[lista[h]])
+                                lista.pop(h)
+                                h=0
+                            else:
+                                h=h+1
+                        # sumar todos los elementos
+                    listafinal = []
+                    listafinal.clear()
+                    listafinal = [0]*(b)
+                    li = []
+                    listafinal[0] = g
+                    for q in range(len(lista_coincidencia)):
+                        li = lista_coincidencia[q]
+                        for w in range (b):
+                            listafinal[w] = listafinal[w] + li[w]
+                    listafinal.append(len(lista_coincidencia))                   
+                    matriz_reducida.append(listafinal)
+                        #agregar la fila restante al listado
+                mat = Info(n_matriz,m_matriz,nombre_Matriz,matriz_reducida,matriz_valores)
+                listaCircular.Agregar(mat)
                           
 def escribir():
     if archivo_Seleccionado == False:
@@ -155,7 +156,7 @@ def escribir():
         for data in listaNodo:
             d = len(data.getDato().getMatriz())
             h = len(data.getDato().getMatriz()[0])
-            matriz = SubElement(matrices,'matriz', nombre=data.getDato().getNombre() ,n=str(d) ,m=str(h-3),g=str(d))
+            matriz = SubElement(matrices,'matriz', nombre=data.getDato().getNombre() ,n=str(d) ,m=str(h-2),g=str(d))
             filas = len(data.getDato().getMatriz())
             for i in range(int(filas)):
                 for j in range(1,int(data.getDato().getColumna())+1):

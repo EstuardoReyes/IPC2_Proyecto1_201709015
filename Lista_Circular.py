@@ -22,12 +22,33 @@ class ListaCircular():
         aux = self.primero
         while aux.siguiente != self.primero:
             print(aux.dato.nombre)
-            
             aux = aux.siguiente 
         print(aux.dato.nombre) 
         
 
     def get_Primero(self):
         return self.primero
+
+    def buscar(self, nomb):
+        aux = self.primero
+        head = self.primero
+        salir = False
+        if self.Vacia() == True:
+            return False
+        else: 
+            if self.primero == self.ultimo:
+                return False
+            else:
+                salir == False
+                while salir == False:
+                    if (aux.getDato().getNombre() == nomb):
+                        salir = True
+                        return True
+                    if (aux.siguiente != head):
+                        aux = aux.siguiente
+                    else:
+                        salir = True  
+                return False
+
     
     
