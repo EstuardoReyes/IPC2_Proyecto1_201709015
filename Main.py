@@ -96,17 +96,21 @@ def procesar():
                     lista_coincidencia.append(matriz_valores[g])  #se agrega este valor a la lista de coincidencia 
                     lista.pop(0)  
                     lista_eliminacion = [] 
+                   
                             # se elimina el primer valor de la lista
-                    if len(lista) > 1: # mientras en la lista hayan mas de 1 elemnto
+                    if len(lista) >= 1: # mientras en la lista hayan mas de 1 elemnto
                         h = 0
                         while h<len(lista): # recorre los numeros que quedan en la lista
                             coincide = True  
                             lis_2 = matriz_binaria[lista[h]]  
+                            
                             for i in range(b):
                                 if int(lis_1[i]) != int(lis_2[i]):     #de momento creo que esto va bien
                                     coincide = False
+                                
                             if coincide == True:
                                 lista_coincidencia.append(matriz_valores[lista[h]])
+
                                 lista.pop(h)
                                 h=0
                             else:
