@@ -18,13 +18,6 @@ class ListaCircular():
             self.ultimo = aux.siguiente = Nodo(dato)
             self.ultimo.siguiente = self.primero
         
-    def Recorrer(self):
-        aux = self.primero
-        while aux.siguiente != self.primero:
-            print(aux.dato.nombre)
-            aux = aux.siguiente 
-        print(aux.dato.nombre) 
-        
 
     def get_Primero(self):
         return self.primero
