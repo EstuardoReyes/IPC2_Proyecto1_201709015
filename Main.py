@@ -58,8 +58,7 @@ def procesar():
                 print("Matriz ignorada por nombre igual a :"+nombre_Matriz)
             else:
                 n_matriz = matriz.getAttribute('n')
-                m_matriz = matriz.getAttribute('m')    
-                items = matriz.getElementsByTagName('dato') 
+                m_matriz = matriz.getAttribute('m')                     
                 a = int(n_matriz)+1
                 b = int(m_matriz)+1
                 for i in range(a):
