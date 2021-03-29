@@ -1,11 +1,7 @@
 from tkinter import Tk     
 from tkinter.filedialog import askopenfilename
 from tkinter.filedialog import askdirectory
-import xml.etree.ElementTree as ET
-from xml.etree.ElementTree import Element, SubElement, tostring
 from xml.dom import minidom
-from Lista_Circular import ListaCircular
-from Info import Info
 from xml.etree import ElementTree
 from graphviz import Digraph
 import os
@@ -58,7 +54,8 @@ def procesar():
                 print("Matriz ignorada por nombre igual a :"+nombre_Matriz)
             else:
                 n_matriz = matriz.getAttribute('n')
-                m_matriz = matriz.getAttribute('m')                     
+                m_matriz = matriz.getAttribute('m')    
+                items = matriz.getElementsByTagName('dato') 
                 a = int(n_matriz)+1
                 b = int(m_matriz)+1
                 for i in range(a):
@@ -258,5 +255,4 @@ while salida == False:
         salida = True
     else:
         print("Opcion "+a+" no se encuentra entre las opciones")
-
-
+        
